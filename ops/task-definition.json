@@ -1,0 +1,19 @@
+{
+  "family": "outyet-service",
+  "containerDefinitions": [
+    {
+      "name": "outyet-service",
+      "image": "424795685451.dkr.ecr.us-east-1.amazonaws.com/outyet-image:latest",
+      "cpu": 128,
+      "memoryReservation": 128,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "command": ["./main"],
+      "essential": true
+    }
+  ]
+}

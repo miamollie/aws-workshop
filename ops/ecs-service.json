@@ -1,0 +1,14 @@
+{
+  "cluster": "outyet-cluster",
+  "serviceName": "outyet-service",
+  "taskDefinition": "outyet-service",
+  "loadBalancers": [
+    {
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:424795685451:targetgroup/outyet-target-group/686f0c9d53f14b29",
+      "containerName": "outyet-service",
+      "containerPort": 8080
+    }
+  ],
+  "desiredCount": 3,
+  "role": "ecsServiceRole"
+}
