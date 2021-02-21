@@ -120,3 +120,16 @@ Note to self; you had to create the ecsServiceRole yourself
 
 https://acloud.guru/forums/aws-ecs-scaling-docker/discussion/-KoftNn-sf4KhPe6t0WZ/error%20with%20the%20service%20role
 https://docs.aws.amazon.com/AmazonECS/latest/developerguide/check-service-role.html
+
+
+
+##  Exercises
+* Drain an instance and see what happens – why?
+* Stop task and see what happens – why?
+* How many spa node servers are running? Can you see in AWS console, in a CF template
+* Curl your ELB at its public endpoint to check on your app 
+* CLI vs Console? Is it a one off setup, or will we need to re-do it easily, repeatedly and regularly? 
+* Task definition vs CloudFormation template? 
+* Which things need to change at every deploy? 
+* Which things are we changing when we rotate the stack for an AMI update?
+* Teardown! Remove all traces - try to remember what we created. What order does it need to be removed in? (Important, aws may charge $$)
