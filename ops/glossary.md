@@ -1,12 +1,4 @@
-## EC2 vs ECS vs Fargate
-
-EC2 is scalable containers running on a server - elastic cloud compute.
-
-ECS manages the placement of your containers across your cluster based on your resource needs. ECS can be Serverless ( fargate) or you can configure the servers in the cluster (manage your own EC2 instances)
-
-Fargate allows you to run Docker containers without having to manage servers or clusters. You hand over control of the management of services to AWS to do what they see fit. No need to manage or configure servers.
-
-### Glossary
+# Glossary
 
 - _AWS_ is infrastructure as a service (plus other stuff)
 - _VPC_ Virtual Private Cloud. A virtual networking environment, isolated section of your AWS services that keeps your stuff contained .
@@ -21,6 +13,14 @@ Fargate allows you to run Docker containers without having to manage servers or 
 - _Task definition_ is a blueprint for your application. Each time you launch a task in Amazon ECS, you specify a task definition. The service then knows which Docker image to use for containers, how many containers to use in the task, and the resource allocation for each container.
 - _ECS cluster_ is a logical grouping of tasks or services. The container agent runs on each EC2 within a cluster. It sends information about the resource's current running tasks and resource utilization to Amazon ECS - so it can assign tasks to instances as needed (or spin up server less on fargate)
 - _Subnet group_ is a logical subdivision of an IP network._AWS_ provides two types of _subnetting_ one is Public which allow the internet to access the machine and another is private which is hidden from the internet
+
+## EC2 vs ECS vs Fargate
+
+EC2 is scalable containers running on a server - elastic cloud compute.
+
+ECS manages the placement of your containers across your cluster based on your resource needs. ECS can be Serverless ( fargate) or you can configure the servers in the cluster (manage your own EC2 instances)
+
+Fargate allows you to run Docker containers without having to manage servers or clusters. You hand over control of the management of services to AWS to do what they see fit. No need to manage or configure servers.
 
 ## Not covered
 
@@ -45,10 +45,17 @@ These are services we do use at 99 but not covered within the scope of this work
 Below are some references used to compile this workshop
 
 [Gateway](https://docs.aws.amazon.com/ecs/?id=docs_gateway)  
+
 [ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
+
 [What is fargate?](https://docs.aws.amazon.com/AmazonECS/latest/userguide/what-is-fargate.html)
+
 [Aws docs](https://docs.aws.amazon.com/index.html)
+
 [Circle CI - how to deploy a simple go app](https://circleci.com/blog/use-circleci-orbs-to-build-test-and-deploy-a-simple-go-application-to-aws-ecs/)
+
 [AWS in plain English](https://expeditedsecurity.com/aws-in-plain-english/)
+
 [Deploying docker containers in AWS](https://aws.amazon.com/getting-started/hands-on/deploy-docker-containers/)
+
 [DevOps Girls Cloud netowrking](https://github.com/DevOps-Girls/DevOps-Girls-Cloud-Networking/blob/master/2-AWS%20Resources/aws-resources.md)
