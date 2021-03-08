@@ -1,14 +1,14 @@
 {
   "cluster": "outyet-cluster",
   "serviceName": "outyet-service",
-  "taskDefinition": "outyet-service",
+  "taskDefinition": "outyet-task:1",
   "loadBalancers": [
     {
-      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:424795685451:targetgroup/outyet-target-group/686f0c9d53f14b29",
-      "containerName": "outyet-service",
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:843446307664:targetgroup/outyet-elb-target-group/12bef539615e0ddd",
+      "containerName": "outyet-task",
       "containerPort": 8080
     }
   ],
   "desiredCount": 3,
-  "role": "ecsServiceRole"
+  "role": "arn:aws:iam::843446307664:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
 }

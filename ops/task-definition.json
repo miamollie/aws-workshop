@@ -1,9 +1,9 @@
 {
-  "family": "outyet-service",
+  "family": "outyet-task",
   "containerDefinitions": [
     {
-      "name": "outyet-service",
-      "image": "424795685451.dkr.ecr.us-east-1.amazonaws.com/outyet-image:latest",
+      "name": "outyet-task",
+      "image": "843446307664.dkr.ecr.us-east-1.amazonaws.com/outyet-image:latest",
       "cpu": 128,
       "memoryReservation": 128,
       "portMappings": [
@@ -12,7 +12,7 @@
           "protocol": "tcp"
         }
       ],
-      "command": ["./main"],
+      "command": ["/go/bin/outyet"],
       "essential": true
     }
   ]
