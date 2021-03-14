@@ -1,4 +1,8 @@
-# Deploy Instructions
+# Architecture
+
+In the following steps, we will be building an architecture similar to the one below:
+
+![architecture diagram](architecture.png "Architecture")
 
 ## AWS – Prerequisites
 
@@ -103,8 +107,6 @@ Note to self; you had to create the ecsServiceRole yourself
 
 https://acloud.guru/forums/aws-ecs-scaling-docker/discussion/-KoftNn-sf4KhPe6t0WZ/error%20with%20the%20service%20role
 https://docs.aws.amazon.com/AmazonECS/latest/developerguide/check-service-role.html
-
-
 
 ##  Exercises
 * Drain an instance and see what happens – why?
