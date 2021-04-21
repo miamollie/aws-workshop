@@ -17,15 +17,6 @@ The goal of this workshop is to familiarise yourself with the fundamentals of ho
 
 ---
 
-Our infrastructure boils down to containers in the cloud.
+Work through deploying a basic app first, in turn applying this new knowledge to unpacking how the SPA is deployed and contrasting the ECS, Fargate and plain EC2 setups.
 
-By the end of this workshop we should be able to answer the following questions.
-
-1. How do they get there?
-2. Who starts them running?
-3. How do they talk to each other and the internet?
-4. How do they respond to load?
-
-Work deploying a basic app first, in turn applying this new knowledge to unpacking how the SPA is deployed and contrasting the ECS, Fargate and plain EC2 setups.
-
-Refer to the [AWS workshop repo](https://github.com/miamollie/aws-workshop) to find source code for the app to deploy, as well as templates and the commands needed.The `ops/readme.md` of that repo has the next steps. Once you’ve got an app running we can circle back and take a look at the exercises below,
+Refer to the [AWS workshop repo](https://github.com/miamollie/aws-workshop) to find source code for the app to deploy, as well as templates and the commands needed. The `ops/readme.md` of that repo has the next steps.
