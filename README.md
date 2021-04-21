@@ -19,4 +19,4 @@ The goal of this workshop is to familiarise yourself with the fundamentals of ho
 
 Work through deploying a basic app first, in turn applying this new knowledge to unpacking how the SPA is deployed and contrasting the ECS, Fargate and plain EC2 setups.
 
-Refer to the [AWS workshop repo](https://github.com/miamollie/aws-workshop) to find source code for the app to deploy, as well as templates and the commands needed. The `ops/readme.md` of that repo has the next steps.
+Refer to the [AWS workshop repo](https://github.com/miamollie/aws-workshop) to find source code for the app to deploy, as well as templates and the commands needed. Follow the steps outlined in `ops/readme.md`. You can refer to the [glossary](https://github.com/miamollie/aws-workshop/blob/master/ops/glossary.md) for an TLAs and AWS jargon. 
