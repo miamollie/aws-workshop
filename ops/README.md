@@ -6,9 +6,13 @@ In the following steps, we will be building an architecture similar to the one b
 
 ## AWS – Prerequisites
 
-1. Set up your own account and login
+1. Set up your own personal AWS account and login.
 
-2. Create a new IAM user https://console.aws.amazon.com/iam/home#/users
+2. Clone this repo, we will be running the commands from inside this folder. We need to build an image of our application that we can run on AWS. We can do so by running the following command from the `aws-workshop` project directory:
+
+    `docker build -t outyet-image .`
+
+3. Create a new IAM user https://console.aws.amazon.com/iam/home#/users
 -> `Add User`
 
     IAM is a service that handles access to the AWS account. We will need a new user with API access to run the commands in the rest of the workshop. 
@@ -17,16 +21,16 @@ In the following steps, we will be building an architecture similar to the one b
 
     `Access type` - `Programmatic access`
 
-    `Permissions` - `Attach existing policies directly`, select `AdministratorAccess`
+    `Permissions` - `Attach existing policies directly`, select the checkbox for `AdministratorAccess`. Keep hitting 'Next' until you've created the user. After clicking 'Create User', stay on this page.
 
-We can now use the generated `Access key ID` and `Secret access key` to setup our `aws-vault` credentials.
+    We can now use the generated `Access key ID` and `Secret access key` to setup our `aws-vault` credentials.
 
-3. Connect to aws-vault
+4. Connect to aws-vault
 https://github.com/99designs/aws-vault
 
 `aws-vault` is a tool that securely stores and accesses the previously generated access key and secret for us, so we don't need to keep typing them in. It creates temporary sessions for us whenever we run a command to ensure our AWS access is as secure as possible. 
 
-Install `aws-vault` using the instructions [here](https://github.com/99designs/aws-vault#installing) (if you haven't already at 99designs), then jump to the [quick start](https://github.com/99designs/aws-vault#quick-start) to create a new profile:
+Install `aws-vault` using the instructions [here](https://github.com/99designs/aws-vault#installing) (if you haven't already at 99designs, check by running `aws-vault` on the command line), then configure your AWS vault to add a new profile (using the details from the IAM user that we created earlier):
 
 ```bash
 $ aws-vault add aws-workshop
@@ -34,7 +38,7 @@ Enter Access Key Id: ABDCDEFDASDASF
 Enter Secret Key: %%%
 ```
 
-Configure a region by adding
+In your terminal, configure a region by adding
 `profile=us-east-1` under the newly added profile in
 `~/.aws/config`, otherwise you will have to keep specifying a region at each command.
 
@@ -50,11 +54,6 @@ Note that a default VPC is created when you create a free account, you can check
 `aws-vault exec aws-workshop -- aws ec2 describe-vpcs`
 
 to confirm whether your AWS vault credentials are setup correctly. 
-
-## Build the APP
-We need to build an image of our application that we can run on AWS. We can do so with the following command:
-
-`docker build -t outyet-image .`
 ## Host Docker image on ECR
 
 We use Amazon ECR (Elastic Container Repository) to host our application images, which AWS can pull from to run our application in later steps. 
@@ -68,7 +67,7 @@ Keep the visibility `private` and the rest of the options default, then click `C
 
 Note: you will need to replace the URI with the one from your account. It is available from the table at https://console.aws.amazon.com/ecr/repositories
 
-`aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 698033624876.dkr.ecr.us-east-1.amazonaws.com/outyet-image`
+`aws-vault exec aws-workshop -- aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 424795685451.dkr.ecr.us-east-1.amazonaws.com/outyet-image`
 
 You should see a `Login succeeded` message to indicate you will be able to push your image.
 
@@ -116,12 +115,12 @@ Create a task definition, a blueprint to _start_ the container. Task definitions
 
 Note: you will need to update the `image` definition in the `task-definition.json` file to match the location of your ECR repository for this step to work correctlly.
 
-`aws ecs register-task-definition --cli-input-json file://task-definition.json`
+```
+cd ops
+aws-vault exec aws-workshop -- aws ecs register-task-definition --cli-input-json file://task-definition.json
+```
 
 This will create a new Task Definition, which is what ECS uses to 'run' a particular container. Each time you register a task definition for a particular task name, it will create a new task 'number' for us. We have just created version 1 of our `outyet-task`, which you can see [here](https://console.aws.amazon.com/ecs/home?region=us-east-1#/taskDefinitions/outyet-task/1). 
-#### Gotchas
-
-- Command and container port should match what you specified in your Dockerfile (with the `EXPOSE` definition).
 ## Load balancer and a target group
 
 For our application to be truly scalable, we need something that sits in front of our containers to handle ALL of our requests, and route them to containers that have the least load on them. AWS provides a service called 'Application Load Balancers' which does just that. It also ensures that all our containers are healthy by running periodic 'health checks' against them, which the containers have to pass for traffic to be routed their way. 
@@ -131,15 +130,15 @@ Create an ALB via the AWS Console: https://console.aws.amazon.com/ec2/v2/home?re
 - Select application load balancer, name it `outyet-alb`, leave everything else the same, ensuring you have your default VPC setup.
 - Select all available `Availablility zones`. These are separate physical locations that Amazon runs their infrastructure on, which ensures that if there is an issue with one, our application can still be run in any of the other datacentres. AWS handles this transparently for us. 
 - Skip the warning about SSL, this is just a test app
-- Create a new Security group named `outyet-elb-sg`; open up port 80 and source 0.0.0.0/0 so anything from the outside world can access the ELB on port 80 (HTTP). To do so, ensure `Port Range` is `80`, and the Source is `Custom` with a value of `0.0.0.0/0, ::/0`. This means our load balancer will accept traffic on port 80 from anywhere. 
-- Create a new target group named outyet-elb-target-group with port 80. The ALB will forward any requests to our instances in this target group on the specified port. 
+- Create a new Security group named `outyet-alb-sg`; open up port 80 and source 0.0.0.0/0 so anything from the outside world can access the ALB on port 80 (HTTP). To do so, ensure `Port Range` is `80`, and the Source is `Custom` with a value of `0.0.0.0/0, ::/0`. This means our load balancer will accept traffic on port 80 from anywhere. 
+- Create a new target group named outyet-alb-target-group with port 80. The ALB will forward any requests to our instances in this target group on the specified port. 
 - Register instances to your target group (registers instances to the load balancer). These instances were created for us automatically during the `Cluster` setup.
 
 Right now, our EC2 instances (using security group `outyet-sg`) which we just registered will not accept any connections from the load balancer as they are assigned the very first security group which we created which didn't have any 'allow' rules applied. This means that traffic from the load balancer cannot even reach our insances where we will be running our containers. We can use the following command to rectify this:
 
-`aws ec2 authorize-security-group-ingress --group-name outyet-sg --protocol tcp --port 1-65535 --source-group outyet-elb-sg`
+`aws-vault exec aws-workshop -- aws ec2 authorize-security-group-ingress --group-name outyet-sg --protocol tcp --port 1-65535 --source-group outyet-alb-sg`
 
-The above command means `For any resource that has the outyet-sg security group applied, allow access on all ports to any resources that have the outyet-elb-sg security group applied`. Because our EC2 instances have the `outyet-sg` security group applied, and our load balancer has the `outyet-elb-sg` group, this means requests that come to our load balancer can now be passed onto our instances, ready for our application to handle!
+The above command means `For any resource that has the outyet-sg security group applied, allow access on all ports to any resources that have the outyet-alb-sg security group applied`. Because our EC2 instances have the `outyet-sg` security group applied, and our load balancer has the `outyet-alb-sg` group, this means requests that come to our load balancer can now be passed onto our instances, ready for our application to handle!
 
 Note: The above command can also be replicated through 'click-ops' in the AWS console by editing the security group directly. You can view that it has applied correctly by viewing the security group in the AWS console. 
 
@@ -148,7 +147,7 @@ A service defines how we want to run our task definition, including how many con
 
 Jump into the `ecs-service.json` Cloudformation template to get started. Use the ARN (resource name) of your new load balancer's target group in this template for the target group (you can get this by going to the [`Target Groups` AWS Console page](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#TargetGroups:)). You will also need to update the `role` value to the ARN for the ECS role in your account from [here](https://console.aws.amazon.com/iam/home#/roles/AWSServiceRoleForECS).
 
-`aws ecs create-service --cli-input-json file://ecs-service.json`
+`aws-vault exec aws-workshop -- aws ecs create-service --cli-input-json file://ecs-service.json`
 
 What have we done here? Let's find out! Head back to our [ECS `outyet-cluster` page](https://console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/outyet-cluster/services) and see what's changed:
 
@@ -161,8 +160,5 @@ Now that we have created all the infrastructure, let's check that our app is run
 * If we have very heavy traffic load and want to run some more containers, what do we need to change? Give it a go and see what happens. 
 * If we need to release a new version of our application, which resources need to be changed and updated? Why?
 * How can we ensure on a new deploy that there is no downtime for our application?
-* Drain an instance and see what happens – why?
-* How many spa node servers are running? Can you see in AWS console, in a CF template
-* CLI vs Console? Is it a one off setup, or will we need to re-do it easily, repeatedly and regularly?
 * We are now running some of our services on `Fargate`, as opposed to EC2. Which parts of our infrastructure do we not need when running on `Fargate`?
 * Teardown! Remove all traces - try to remember what we created. What order does it need to be removed in? (Important, aws may charge $$)
