@@ -13,7 +13,6 @@ By the end of this workshop we should be able to answer the following questions.
 3. How do they talk to each other and the internet?
 4. How do they respond to load?
 
-The goal of this workshop is to familiarise yourself with the fundamentals of how our apps are hosted on AWS. AWS is full of jargon and abbreviations, but hopefully by stepping through deploying a basic test app we can demystify what some of these services do. This is a self directed workshop with sone questions and exercises to consolidate your learning. Knowledge of docker and the benefits of containerised services is assumed.
 
 ---
 
