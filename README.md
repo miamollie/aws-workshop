@@ -1,6 +1,6 @@
 # Introductory AWS workshop
 
-The goal of this workshop is to familiarise yourself with the fundamentals of how our apps are hosted on AWS. AWS is full of jargon and abbreviations, but hopefully by stepping through deploying a basic test app we can demystify what some of these services do. This is a self directed workshop with sone questions and exercises to consolidate your learning. Knowledge of docker and the benefits of containerised services is assumed.
+The goal of this workshop is to familiarise yourself with the fundamentals of how our apps are hosted on AWS. AWS is full of jargon and abbreviations, but hopefully by stepping through deploying a basic test app we can demystify what some of these services do. This is a self directed workshop with some questions and exercises to consolidate your learning. Knowledge of docker and the benefits of containerised services is assumed.
 
 ---
 
